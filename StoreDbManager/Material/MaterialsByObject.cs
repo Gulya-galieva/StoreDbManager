@@ -576,17 +576,34 @@ namespace StoreDbManager
                                    where point.SubstationId == substationId && point.Status == RegPointStatus.Default
                                    from device in _db.Devices
                                    where device.Id == point.DeviceId
+                                   from switchesTT in _db.Switches
+                                   where switchesTT.DeviceSerial == device.SerialNumber
                                    from reportItem in _db.Switches
                                    where reportItem.DeviceSerial == device.SerialNumber
-                                   select reportItem;
+                                   select new
+                                   {
+                                       reportItem,
+                                       switchesTT.TTAk,
+                                       switchesTT.TTBk,
+                                       switchesTT.TTCk
+                                   };
 
                     var switches = _switch.ToList();
                     double kvvg = 0;
-                    foreach(var item in switches)
+                    int TTAk = 0;
+                    int TTBk = 0;
+                    int TTCk = 0;
+                    foreach (var item in switches)
                     {
-                        kvvg += item.KVVG;
+                        kvvg += item.reportItem.KVVG;
+                        TTAk = item.reportItem.TTAk;
+                        TTBk = item.reportItem.TTBk;
+                        TTCk = item.reportItem.TTCk;
                     }
                     result.Add(new SubstationMaterial() { Name = "Кабель КВВГ 10x2.5", Volume = kvvg, Unit = "м" });
+                    result.Add(new SubstationMaterial() { Name = "ТТ ф. A", Volume = TTAk });
+                    result.Add(new SubstationMaterial() { Name = "ТТ ф. B", Volume = TTBk });
+                    result.Add(new SubstationMaterial() { Name = "ТТ ф. C", Volume = TTCk });
                 }
             }
             return result;
