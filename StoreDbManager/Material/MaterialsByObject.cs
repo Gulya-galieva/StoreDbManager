@@ -576,35 +576,65 @@ namespace StoreDbManager
                                    where point.SubstationId == substationId && point.Status == RegPointStatus.Default
                                    from device in _db.Devices
                                    where device.Id == point.DeviceId
-                                   from switchesTT in _db.Switches
-                                   where switchesTT.DeviceSerial == device.SerialNumber
                                    from reportItem in _db.Switches
                                    where reportItem.DeviceSerial == device.SerialNumber
-                                   select new
-                                   {
-                                       reportItem,
-                                       switchesTT.TTAk,
-                                       switchesTT.TTBk,
-                                       switchesTT.TTCk
-                                   };
+                                   select reportItem;
 
                     var switches = _switch.ToList();
                     double kvvg = 0;
-                    int TTAk = 0;
-                    int TTBk = 0;
-                    int TTCk = 0;
                     foreach (var item in switches)
                     {
-                        kvvg += item.reportItem.KVVG;
-                        TTAk = item.reportItem.TTAk;
-                        TTBk = item.reportItem.TTBk;
-                        TTCk = item.reportItem.TTCk;
+                        kvvg += item.KVVG;
                     }
                     result.Add(new SubstationMaterial() { Name = "Кабель КВВГ 10x2.5", Volume = kvvg, Unit = "м" });
-                    result.Add(new SubstationMaterial() { Name = "ТТ ф. A", Volume = TTAk });
-                    result.Add(new SubstationMaterial() { Name = "ТТ ф. B", Volume = TTBk });
-                    result.Add(new SubstationMaterial() { Name = "ТТ ф. C", Volume = TTCk });
                 }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Получить коэффициенты трансформации тока по фазам
+        public static List<SubstationMaterial> GetSBTT (int substationId)
+        {
+            var result = new List<SubstationMaterial>();
+
+            using (StoreContext _db = new StoreContext())
+            {
+                var _switch = from point in _db.RegPoints
+                              where point.SubstationId == substationId && point.Status == RegPointStatus.Default
+                              from device in _db.Devices
+                              where device.Id == point.DeviceId
+                              from switchesTT in _db.Switches
+                              where switchesTT.DeviceSerial == device.SerialNumber
+                              select new
+                              {
+                                  switchesTT.TTAk,
+                                  switchesTT.TTBk,
+                                  switchesTT.TTCk
+                              };
+
+                var switches = _switch.ToList();
+                string TTAk = "";
+                string TTBk = "";
+                string TTCk = "";
+                foreach (var item in switches)
+                {
+                    if (TTAk == "")
+                    {
+                        TTAk = item.TTAk.ToString() + "/5";
+                        TTBk = item.TTBk.ToString() + "/5";
+                        TTCk = item.TTCk.ToString() + "/5";
+                    }
+                    else
+                    {
+                        TTAk = TTAk + ", " + item.TTAk.ToString() + "/5";
+                        TTBk = TTBk + ", " + item.TTBk.ToString() + "/5";
+                        TTCk = TTCk + ", " + item.TTCk.ToString() + "/5";
+                    }
+                }
+                result.Add(new SubstationMaterial() { Name = "ТТ ф. A", Unit = TTAk });
+                result.Add(new SubstationMaterial() { Name = "ТТ ф. B", Unit = TTBk });
+                result.Add(new SubstationMaterial() { Name = "ТТ ф. C", Unit = TTCk });
             }
             return result;
         }
