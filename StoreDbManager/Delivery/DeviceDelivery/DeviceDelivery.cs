@@ -88,7 +88,7 @@ namespace DbManager
                     return string.Empty;
 
                 case "возврат на склад":
-                    if (!(device.CurrentState == "выдача со склада" || device.CurrentState == "пивязан к ТУ" || device.CurrentState == "включен в отчет" || device.CurrentState == "принят куратором"))
+                    if (!(device.CurrentState == "выдача со склада" || device.CurrentState == "привязан к ту" || device.CurrentState == "включен в отчет" || device.CurrentState == "принят куратором"))
                         return "Оборудование [" + device.SerialNumber + "] не имеет статус выдачи со склада";
                     else return string.Empty;
 

@@ -21,6 +21,7 @@ namespace StoreDbManager.QueryModels
         public bool IsInstallationDone { get; set; }
         public bool IsPropSchemeDone { get; set; }
         public bool IsBalanceDone { get; set; }
+        public bool IsKS2Done { get; set; }
         public DateTime LastChanges { get; set; } = DateTime.MinValue;
         public string LastChangesFormated { get => LastChanges.ToString("dd MMM yyyy HH:mm"); }
     }

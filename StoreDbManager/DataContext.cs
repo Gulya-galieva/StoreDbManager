@@ -1426,6 +1426,9 @@ namespace DbManager
         /// <summary> Баланс сведен </summary>
         [DefaultValue(false)]
         public bool IsBalanceDone { get; set; }
+        /// <summary> КС-2  сделана </summary>
+        [DefaultValue(false)]
+        public bool IsKS2Done { get; set; }
 
         public Substation()
         {
