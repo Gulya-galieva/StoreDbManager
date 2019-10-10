@@ -176,6 +176,28 @@ namespace StoreDbManager
                                };
                 var Regdevices = Regpoint.ToList();
 
+                //Считаем количество фиксаторов
+                var Fixators = from Regpoints in _db.RegPoints
+                               where Regpoints.SubstationId == substationId
+                               from device in _db.Devices
+                               where device.Id == Regpoints.DeviceId
+                               from reportItem in _db.MounterReportUgesALItems
+                               where reportItem.DeviceId == device.Id
+                               from kde in _db.KDEs
+                               where kde.Id == reportItem.KDEId 
+                               from powerline in _db.PowerLineSupports
+                               where powerline.Id == kde.PowerLineSupportId
+                               group powerline by new
+                               {
+                                   Id = powerline.Id,
+                                   supportnumber = powerline.SupportNumber,
+                                   powerlinetype = powerline.PowerLineType,
+                                   fixatorcount = powerline.FixatorsCount,
+                                   reportsitem = powerline.MounterReportUgesALId
+                               } into g
+                               select g;
+                var FixatorCount = Fixators.ToList();
+
                 var sip2 = _db.MaterialTypes.FirstOrDefault(m => m.Name.Contains("СИП-4 2х16"));
                 var sip4 = _db.MaterialTypes.FirstOrDefault(m => m.Name.Contains("СИП-4 4х16"));
                 double sip2Volume = 0;
@@ -350,7 +372,7 @@ namespace StoreDbManager
                         }
                     }
 
-                    fixatorsCount += item.reportItem.KDE.PowerLineSupport.FixatorsCount;
+                    //fixatorsCount += item.reportItem.KDE.PowerLineSupport.FixatorsCount;
 
                     //Доп материалы указанные монтажником
                     materialFound = false;
@@ -375,6 +397,11 @@ namespace StoreDbManager
                             materialFound = false;
                         }
                     }
+                }
+
+                foreach(var fixators in FixatorCount)
+                {
+                    fixatorsCount += fixators.Key.fixatorcount;
                 }
 
                 result.Add(new SubstationMaterial { Name = "Провод СИП-4 2х16", Volume = sip2Volume, Unit = "м" });
