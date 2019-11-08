@@ -346,6 +346,9 @@ namespace StoreDbManager
                 //Не учитываем статус ТУ при подсчете по данным из БД
                 foreach (var item in Regdevices)
                 {
+                    if (item.PowerLineSupport.SupportNumber == 0)
+                        fixatorsCount += item.PowerLineSupport.FixatorsCount;
+
                     if (item.DeviceType.Description.ToLower().Contains("1ф")) //Подсчет использованного СИПа для 1ф ПУ
                         sip2Volume += item.reportItem.WireConsumptionNewInput + item.reportItem.WireConsumptionUpDown;
 
@@ -399,10 +402,14 @@ namespace StoreDbManager
                     }
                 }
 
-                foreach(var fixators in FixatorCount)
+                if (fixatorsCount == 0)
                 {
-                    fixatorsCount += fixators.Key.fixatorcount;
-                }
+                    foreach (var fixators in FixatorCount)
+                    {
+                        if (fixators.Key.supportnumber != 0)
+                            fixatorsCount += fixators.Key.fixatorcount;
+                    }
+                }                         
 
                 result.Add(new SubstationMaterial { Name = "Провод СИП-4 2х16", Volume = sip2Volume, Unit = "м" });
                 result.Add(new SubstationMaterial { Name = "Провод СИП-4 4х16", Volume = sip4Volume, Unit = "м" });
