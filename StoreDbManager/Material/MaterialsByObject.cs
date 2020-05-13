@@ -450,7 +450,7 @@ namespace StoreDbManager
                 var result = new List<SubstationMaterial>();
 
                 var points = from point in _db.RegPoints
-                             where point.SubstationId == substationId //&& point.Status == RegPointStatus.Default
+                             where point.SubstationId == substationId && (point.Status == RegPointStatus.Default || point.Status == RegPointStatus.Demounted)
                              from device in _db.Devices
                              where device.Id == point.DeviceId && device.DeviceTypeId != 6
                              from flags in _db.RegPointFlags
@@ -535,7 +535,7 @@ namespace StoreDbManager
             {
 
                 var points = from point in _db.RegPoints
-                             where point.SubstationId == substationId //&& point.Status == RegPointStatus.Default
+                             where point.SubstationId == substationId && (point.Status == RegPointStatus.Default || point.Status == RegPointStatus.Demounted)
                              from device in _db.Devices
                              where device.Id == point.DeviceId
                              from reportItem in _db.MounterReportUgesALItems

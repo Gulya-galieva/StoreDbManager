@@ -419,7 +419,8 @@ namespace DbManager
         {
             var datePeriodEnd = report.DatePeriodStart.Day == 1 ?
                    new DateTime(report.DatePeriodStart.Year, report.DatePeriodStart.Month, 15) :
-                   new DateTime(report.DatePeriodStart.Year, report.DatePeriodStart.Month + 1, 1).AddDays(-1);
+                   new DateTime(report.DatePeriodStart.Year, report.DatePeriodStart.Month, 1).AddDays(-1);
+                   /*new DateTime(report.DatePeriodStart.Year, report.DatePeriodStart.Month + 1, 1).AddDays(-1);*/
             return "c " + report.DatePeriodStart.ToString("dd MMMM yyyy") + " по " + datePeriodEnd.ToString("dd MMMM yyyy");
         }
         #endregion
