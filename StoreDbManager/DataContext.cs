@@ -17,7 +17,7 @@ namespace DbManager
     }
     public class StoreContext : DbContext
     {
-        //const string connectionString = "Server=tcp:92.50.142.178,11000; Database=Store; User Id=sa; Password=E3aCnW8lPi;"; //Через внешний IP
+        //const string connectionString = "Server=tcp:46.191.143.136,11000; Database=Store; User Id=sa; Password=E3aCnW8lPi;"; //Через внешний IP
         const string connectionString = "Server=tcp:192.168.10.139; Database=Store; User Id=sa; Password=E3aCnW8lPi;"; //Через локальный IP
         
         public StoreContext(DbContextOptions<StoreContext> options) : base(options) { }

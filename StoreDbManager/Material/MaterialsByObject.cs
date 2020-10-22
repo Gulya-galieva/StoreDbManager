@@ -462,7 +462,8 @@ namespace StoreDbManager
                                  device,
                                  device.SetId,
                                  flags.IsReplace,
-                                 type.Description
+                                 type.Description,
+                                 point.Status
                              };
 
                 var devices = points.ToList();
@@ -501,9 +502,9 @@ namespace StoreDbManager
                         }
                     }
                     else
-                        if (item.IsReplace && (item.Description == "1ф PLC" || item.Description == "1ф GSM"))
+                        if (item.IsReplace && (item.Description == "1ф PLC" || item.Description == "1ф GSM") && item.Status == 0)
                             replace_1++;
-                        else if (item.IsReplace && (item.Description == "3ф PLC" || item.Description == "3ф GSM"))
+                        else if (item.IsReplace && (item.Description == "3ф PLC" || item.Description == "3ф GSM") && item.Status == 0)
                             replace_3++;
                         else
                         replaceSetsCount++;
