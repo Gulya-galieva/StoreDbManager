@@ -80,7 +80,7 @@ namespace StoreDbManager
         }
 
         /// <summary>
-        /// Получить кол-во кде на постанции по типам по привзке на складе
+        /// Получить кол-во кде на постанции по типам по привязке на складе
         /// </summary>
         /// <param name="substationId"></param>
         /// <returns></returns>
